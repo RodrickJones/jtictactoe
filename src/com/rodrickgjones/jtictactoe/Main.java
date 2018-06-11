@@ -41,9 +41,16 @@ public class Main extends Application {
         Board board = new Board(new JavaFxPlayer(Player.Symbol.X), opponent);
         Controller controller = new Controller(board);
         loader.setController(controller);
-        Parent root = loader.load(getClass().getResourceAsStream("javafx/tictactoe.fxml"));
+        Parent root = loader.load(getClass().getResourceAsStream("/com/rodrickgjones/jtictactoe/javafx/tictactoe.fxml"));
         primaryStage.setTitle("jTicTacToe");
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        switch (params.getOrDefault("theme", "light")) {
+            case "dark":
+                scene.getStylesheets().add("/com/rodrickgjones/jtictactoe/javafx/dark.css");
+                break;
+            default:
+        }
+        primaryStage.setScene(scene);
         primaryStage.show();
         controller.startGame();
     }

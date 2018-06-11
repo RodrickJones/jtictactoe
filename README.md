@@ -18,6 +18,7 @@ Download the precompiled JAR or download the source, compile it, and run it usin
 | Parameter | Values | Default | Description | Example |
 | :---: | :---: | :---: | :---: | :---: | 
 | --difficulty | easy, medium, hard, impossible | hard | The difficulty of the AI opponent | --difficulty=impossible
+| --theme | dark, light | light | The style theme to use for the application | --theme=dark
 
 ### Prerequisites
 

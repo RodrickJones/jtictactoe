@@ -17,7 +17,6 @@ public class MinimaxAi extends ArtificialIntelligence {
 
     @Override
     public Board.Square chooseSquare(Board board) {
-        long start = System.nanoTime();
         Board.Square res;
         if (USE_OLD) {
             res = oldMinimax(board.copy(), this).getKey();
@@ -26,7 +25,6 @@ public class MinimaxAi extends ArtificialIntelligence {
             constructTree(root, depth);
             res = minimax(root).getSquare();
         }
-        System.out.println(System.nanoTime() - start);
         return res;
     }
 
