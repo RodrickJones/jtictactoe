@@ -9,14 +9,16 @@ Features 3 different kinds of opponents:
 
 ## Getting Started
 
+[Link to Latest Release](https://github.com/rodrickjones/jtictactoe/releases/latest)
+
 Download the precompiled JAR or download the source, compile it, and run it using your java JRE.
 
-Parameters:
+### Parameters
 
 | Parameter | Values | Default | Description | Example |
 | :---: | :---: | :---: | :---: | :---: | 
 | --difficulty | easy, medium, hard, impossible | hard | The difficulty of the AI opponent | --difficulty=impossible
 
-## Prerequisites
+### Prerequisites
 
 [Java JRE 8+](https://java.com/en/download/)
