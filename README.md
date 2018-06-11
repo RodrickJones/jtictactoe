@@ -20,6 +20,8 @@ Download the precompiled JAR or download the source, compile it, and run it usin
 | --difficulty | easy, medium, hard, impossible | hard | The difficulty of the AI opponent | --difficulty=impossible
 | --theme | dark, light | light | The style theme to use for the application | --theme=dark
 
+E.g. if you want to verse the impossible AI with the Dark theme, use ``` java -jar jtictactoe.jar --difficulty=impossible --theme=dark``` via the command line
+
 ### Prerequisites
 
 [Java JRE 8+](https://java.com/en/download/)
