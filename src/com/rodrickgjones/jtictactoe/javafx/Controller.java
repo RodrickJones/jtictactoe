@@ -25,11 +25,15 @@ public class Controller implements Initializable {
     private GridPane buttonGrid;
 
     private final static Font BUTTON_FONT = new Font(24);
-    private Player player1 = new JavaFxPlayer(Player.Symbol.X);
-    private Player player2 = new MinimaxAi(Player.Symbol.O);
-    private final Board board = new Board(player1, player2);
+    private final Board board;
     private final Button[][] buttons = new Button[3][3];
-    private Player currentPlayer = player1;
+    private Player currentPlayer;
+
+    public Controller(Board board) {
+        this.board = board;
+        this.currentPlayer = board.getPlayer1();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         board.addListener(square -> buttons[square.getColumn()][square.getRow()]
@@ -71,6 +75,8 @@ public class Controller implements Initializable {
     }
 
     public void startGame() {
+        System.out.println("Game started with " + board.getPlayer1().getClass().getSimpleName()
+                + " and " + board.getPlayer2().getClass().getSimpleName());
         if (getCurrentPlayer() instanceof ArtificialIntelligence) {
             Board.Square square = getCurrentPlayer().chooseSquare(getBoard());
             getBoard().captureSquare(square, getCurrentPlayer());
@@ -81,14 +87,6 @@ public class Controller implements Initializable {
         return board;
     }
 
-    public Player getPlayer1() {
-        return player1;
-    }
-
-    public Player getPlayer2() {
-        return player2;
-    }
-
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
@@ -97,7 +95,7 @@ public class Controller implements Initializable {
         if (board.isFull()) {
             return;
         }
-        currentPlayer = currentPlayer == player1 ? player2 : player1;
+        currentPlayer = currentPlayer == board.getPlayer1() ? board.getPlayer2() : board.getPlayer1();
         messageLabel.setText(currentPlayer + "'s turn");
         if (currentPlayer instanceof ArtificialIntelligence) {
             Board.Square square = currentPlayer.chooseSquare(board);

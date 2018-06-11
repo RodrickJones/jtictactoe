@@ -10,6 +10,7 @@ public class Board {
     private final Player player1;
     private final Player player2;
     private List<CaptureListener> listeners = new ArrayList<>();
+    private int untakenSquareCount = 9;
     public Board(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
@@ -38,6 +39,7 @@ public class Board {
                 square.reset();
             }
         }
+        untakenSquareCount = 9;
     }
 
     public Board copy() {
@@ -47,14 +49,18 @@ public class Board {
                 copy.squares[c][r].setOwner(squares[c][r].getOwner());
             }
         }
+        copy.untakenSquareCount = untakenSquareCount;
         return copy;
     }
 
     public boolean captureSquare(Square square, Player owner) {
-        if (owner == null) {
+        if (square == null) {
+            return false;
+        } else if (owner == null) {
             return releaseSquare(square);
         } else if (!square.isTaken()) {
             square.setOwner(owner);
+            --untakenSquareCount;
             listeners.forEach(l -> l.onCapture(square));
             return true;
         }
@@ -62,10 +68,11 @@ public class Board {
     }
 
     public boolean releaseSquare(Square square) {
-        if (!square.isTaken()) {
+        if (square == null || !square.isTaken()) {
             return false;
         }
         square.setOwner(null);
+        untakenSquareCount++;
         listeners.forEach(l -> l.onCapture(square));
         return true;
     }
@@ -105,14 +112,7 @@ public class Board {
     }
 
     public boolean isFull() {
-        for (Square[] column : squares) {
-            for (Square square : column) {
-                if (!square.isTaken()) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return untakenSquareCount == 0;
     }
 
     public List<Square> getUntakenSquares() {
@@ -125,6 +125,10 @@ public class Board {
             }
         }
         return res;
+    }
+
+    public int getUntakenSquareCount() {
+        return untakenSquareCount;
     }
 
     @Override
