@@ -11,6 +11,7 @@ public class Board {
     private final Player player2;
     private List<CaptureListener> listeners = new ArrayList<>();
     private int untakenSquareCount = 9;
+
     public Board(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
@@ -58,7 +59,7 @@ public class Board {
             return false;
         } else if (owner == null) {
             return releaseSquare(square);
-        } else if (!square.isTaken()) {
+        } else if (square.isAvailable()) {
             square.setOwner(owner);
             --untakenSquareCount;
             listeners.forEach(l -> l.onCapture(square));
@@ -68,7 +69,7 @@ public class Board {
     }
 
     public boolean releaseSquare(Square square) {
-        if (square == null || !square.isTaken()) {
+        if (square == null || square.isAvailable()) {
             return false;
         }
         square.setOwner(null);
@@ -85,7 +86,9 @@ public class Board {
         //check columns
         for (int c = 0; c < squares.length; c++) {
             Square square = squares[c][0];
-            if (!square.isTaken()) continue;
+            if (square.isAvailable()) {
+                continue;
+            }
             Player owner = square.getOwner();
             if (owner.equals(squares[c][1].getOwner()) && owner.equals(squares[c][2].getOwner())) {
                 return owner;
@@ -94,7 +97,7 @@ public class Board {
         //check rows
         for (int r = 0; r < squares.length; r++) {
             Square square = squares[0][r];
-            if (!square.isTaken()) continue;
+            if (square.isAvailable()) continue;
             Player owner = square.getOwner();
             if (owner.equals(squares[1][r].getOwner()) && owner.equals(squares[2][r].getOwner())) {
                 return owner;
@@ -102,7 +105,7 @@ public class Board {
         }
         //check diagonals
         Square square = squares[1][1];
-        if (!square.isTaken()) return null;
+        if (square.isAvailable()) return null;
         Player owner = squares[1][1].getOwner();
         if (owner.equals(squares[0][0].getOwner()) && owner.equals(squares[2][2].getOwner())
                 || owner.equals(squares[0][2].getOwner()) && owner.equals(squares[2][0].getOwner())) {
@@ -119,7 +122,7 @@ public class Board {
         List<Square> res = new ArrayList<>();
         for (Square[] array : squares) {
             for (Square square : array) {
-                if (!square.isTaken()) {
+                if (square.isAvailable()) {
                     res.add(square);
                 }
             }
@@ -150,10 +153,16 @@ public class Board {
         listeners.add(listener);
     }
 
-    public class Square {
+    @FunctionalInterface
+    public interface CaptureListener {
+        void onCapture(Square capturedSquare);
+    }
+
+    public static class Square {
         private final int row;
         private final int column;
         private Player owner = null;
+
         Square(int column, int row) {
             this.column = column;
             this.row = row;
@@ -179,8 +188,8 @@ public class Board {
             return owner == null ? " " : owner.getSymbol().toString();
         }
 
-        public boolean isTaken() {
-            return owner != null;
+        public boolean isAvailable() {
+            return owner == null;
         }
 
         private void reset() {
@@ -196,10 +205,5 @@ public class Board {
         public String toString() {
             return "Square(" + column + ", " + row + ", " + getOwnerSymbol() + ")";
         }
-    }
-
-    @FunctionalInterface
-    public interface CaptureListener {
-        void onCapture(Square capturedSquare);
     }
 }

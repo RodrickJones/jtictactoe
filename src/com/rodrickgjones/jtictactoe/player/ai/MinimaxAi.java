@@ -2,14 +2,16 @@ package com.rodrickgjones.jtictactoe.player.ai;
 
 import com.rodrickgjones.jtictactoe.game.Board;
 import com.rodrickgjones.jtictactoe.player.Player;
-import com.rodrickgjones.jtictactoe.util.Random;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MinimaxAi extends ArtificialIntelligence {
     private final static Comparator<Node> SCORE_COMPARATOR = Comparator.comparingInt(Node::getScore);
-    private final static boolean USE_OLD = false;
     private final int depth;
+
     public MinimaxAi(Symbol symbol, int depth) {
         super(symbol);
         this.depth = depth;
@@ -17,61 +19,9 @@ public class MinimaxAi extends ArtificialIntelligence {
 
     @Override
     public Board.Square chooseSquare(Board board) {
-        Board.Square res;
-        if (USE_OLD) {
-            res = oldMinimax(board.copy(), this).getKey();
-        } else {
-            Node root = new Node(board.copy(), null, null);
-            constructTree(root, depth);
-            res = minimax(root).getSquare();
-        }
-        return res;
-    }
-
-    private Map.Entry<Board.Square, Integer> oldMinimax(Board board, Player currentPlayer) {
-        List<Board.Square> squares = board.getUntakenSquares();
-        Map<Board.Square, Integer> scores = new HashMap<>(squares.size());
-        int scoreHeuristic = board.getUntakenSquareCount() + 1;
-        for (Board.Square square : squares) {
-            board.captureSquare(square, currentPlayer);
-            Player winner = board.getWinner();
-            if (winner == null) {
-                scores.put(square, board.isFull() ? 0 : oldMinimax(board, currentPlayer == board.getPlayer1() ? board.getPlayer2() : board.getPlayer1()).getValue());
-            } else if (currentPlayer == this) {
-                scores.put(square, scoreHeuristic);
-            } else {
-                scores.put(square, -scoreHeuristic);
-            }
-            board.releaseSquare(square);
-        }
-        List<Map.Entry<Board.Square, Integer>> candidates = new ArrayList<>(9);
-        int bestScore;
-        if (currentPlayer == this) {
-            bestScore = Integer.MIN_VALUE;
-            for (Map.Entry<Board.Square, Integer> entry : scores.entrySet()) {
-                int score = entry.getValue();
-                if (score == bestScore) {
-                    candidates.add(entry);
-                } else if (entry.getValue() > bestScore) {
-                    candidates.clear();
-                    candidates.add(entry);
-                    bestScore = entry.getValue();
-                }
-            }
-        } else {
-            bestScore = Integer.MAX_VALUE;
-            for (Map.Entry<Board.Square, Integer> entry : scores.entrySet()) {
-                int score = entry.getValue();
-                if (score == bestScore) {
-                    candidates.add(entry);
-                } else if (entry.getValue() < bestScore) {
-                    candidates.clear();
-                    candidates.add(entry);
-                    bestScore = entry.getValue();
-                }
-            }
-        }
-        return Random.nextElement(candidates);
+        Node root = new Node(board.copy(), null, null);
+        constructTree(root, depth);
+        return minimax(root).getSquare();
     }
 
     private Node minimax(Node node) {
@@ -103,7 +53,7 @@ public class MinimaxAi extends ArtificialIntelligence {
         board.releaseSquare(current.getSquare());
     }
 
-    private class Node {
+    private static class Node {
         private final Board board;
         private final Board.Square square;
         private final Player player;
@@ -131,7 +81,7 @@ public class MinimaxAi extends ArtificialIntelligence {
                 score = untakenSquareCount + 1;
             } else {
                 terminal = true;
-                score =  -(untakenSquareCount + 1);
+                score = -(untakenSquareCount + 1);
             }
         }
 

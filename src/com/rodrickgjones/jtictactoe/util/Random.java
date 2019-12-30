@@ -4,7 +4,9 @@ import java.util.List;
 
 public class Random {
     private final static java.util.Random RNG = new java.util.Random();
-    private Random() {}
+
+    private Random() {
+    }
 
     public static int nextInt(int upperBound) {
         return RNG.nextInt(upperBound);

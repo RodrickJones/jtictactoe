@@ -4,6 +4,7 @@ import com.rodrickgjones.jtictactoe.game.Board;
 
 public abstract class Player {
     private final Symbol symbol;
+
     protected Player(Symbol symbol) {
         this.symbol = symbol;
     }

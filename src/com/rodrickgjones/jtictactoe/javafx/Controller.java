@@ -1,12 +1,9 @@
 package com.rodrickgjones.jtictactoe.javafx;
 
+import com.rodrickgjones.jtictactoe.game.Board;
 import com.rodrickgjones.jtictactoe.player.JavaFxPlayer;
 import com.rodrickgjones.jtictactoe.player.Player;
 import com.rodrickgjones.jtictactoe.player.ai.ArtificialIntelligence;
-import com.rodrickgjones.jtictactoe.player.ai.MaxWinsAi;
-import com.rodrickgjones.jtictactoe.player.ai.MinimaxAi;
-import com.rodrickgjones.jtictactoe.game.Board;
-import com.rodrickgjones.jtictactoe.player.ai.RandomAi;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -19,14 +16,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+    private final static Font BUTTON_FONT = new Font(24);
+    private final Board board;
+    private final Button[][] buttons = new Button[3][3];
     @FXML
     private Label messageLabel;
     @FXML
     private GridPane buttonGrid;
-
-    private final static Font BUTTON_FONT = new Font(24);
-    private final Board board;
-    private final Button[][] buttons = new Button[3][3];
     private Player currentPlayer;
 
     public Controller(Board board) {

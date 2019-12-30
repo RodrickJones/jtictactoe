@@ -3,7 +3,10 @@ package com.rodrickgjones.jtictactoe.player.ai;
 import com.rodrickgjones.jtictactoe.game.Board;
 import com.rodrickgjones.jtictactoe.player.Player;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MaxWinsAi extends ArtificialIntelligence {
     public MaxWinsAi(Symbol symbol) {

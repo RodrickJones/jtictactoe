@@ -17,8 +17,12 @@ import java.util.Map;
 
 public class Main extends Application {
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         Map<String, String> params = getParameters().getNamed();
         Player opponent;
@@ -33,7 +37,7 @@ public class Main extends Application {
                 opponent = new MinimaxAi(Player.Symbol.O, 3);
                 break;
             case "impossible":
-                opponent = new MinimaxAi(Player.Symbol.O, -1);
+                opponent = new MinimaxAi(Player.Symbol.O, Integer.MAX_VALUE);
                 break;
             default:
                 throw new IllegalArgumentException(params.get("difficulty") + " is not a valid difficulty");
@@ -48,15 +52,12 @@ public class Main extends Application {
             case "dark":
                 scene.getStylesheets().add("/com/rodrickgjones/jtictactoe/javafx/dark.css");
                 break;
+            case "light":
+                break;
             default:
         }
         primaryStage.setScene(scene);
         primaryStage.show();
         controller.startGame();
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
